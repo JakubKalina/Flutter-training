@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:user_notes/userNote.dart';
+
+import '../constants.dart';
 
 class GetAll extends StatefulWidget {
   GetAll({Key key, this.title}) : super(key: key);
@@ -11,9 +17,33 @@ class GetAll extends StatefulWidget {
 
 class _GetAllState extends State<GetAll> {
 
+    List<UserNote> allNotes;
+
+    @override
+    void initState() {
+      super.initState();
+      this.getAllNotes();
+    }
+
+    // Get all notes from API
+    Future<void> getAllNotes() async {
+      Response response = await get(apiAddress + '/getAll');
+      Map data = jsonDecode(response.body);
+
+      setState(() {
+        allNotes=(data['All notes'] as List).map((i) =>
+                    UserNote.fromJson(i)).toList();
+      });
+    }
+
+    // Remove note by Id
+    Future<void> deleteNoteById(int noteId) async {
+
+    }
+
+
   @override
   Widget build(BuildContext context) {
-
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -99,9 +129,41 @@ class _GetAllState extends State<GetAll> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Get All'
-            )
+              Expanded(
+                              child: ListView.builder(
+                  //scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: allNotes == null ? 0 : allNotes.length,
+                  itemBuilder: (context, index){
+                    return Card(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          ListTile(
+                            leading: Icon(Icons.note),
+                            title: Text(allNotes[index].username),
+                            subtitle: Text(allNotes[index].note),
+                          ),
+                          ButtonBar(
+                            children: <Widget>[
+                              FlatButton(
+                                child: Text('Edytuj'),
+                                onPressed: () {
+                                  Navigator.pushReplacementNamed(context, '/Edit', arguments: <String,String> {'id' : allNotes[index].id.toString()});
+                                },
+                              ),
+                              FlatButton(
+                                child: Text('Usuń'),
+                                onPressed: () {},
+                              )
+                            ],
+                          )
+                        ],
+                      )
+                    );
+                  }
+                ),
+              ),
           ],
         ),
       ),

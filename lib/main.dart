@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:user_notes/screens/AddNew.dart';
+import 'package:user_notes/screens/Edit.dart';
 import 'package:user_notes/screens/GetAll.dart';
 import 'package:user_notes/screens/Home.dart';
 
@@ -20,7 +21,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => MyHomePage(),
         '/GetAll': (context) => GetAll(),
-        '/AddNew': (context) => AddNew()
+        '/AddNew': (context) => AddNew(),
+        '/Edit': (context) => Edit()
       },
     );
   }

@@ -11,6 +11,15 @@ class AddNew extends StatefulWidget {
 
 class _AddNewState extends State<AddNew> {
 
+  int inputId;
+  String inputUsername, inputNote;
+
+  Future<void> addNewNote() async {
+    print(inputId);
+    print(inputUsername);
+    print(inputNote);
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -99,9 +108,36 @@ class _AddNewState extends State<AddNew> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Add New'
-            )
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Id'
+              ),
+              onSaved: (input) => inputId = int.parse(input),
+            ),
+
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Imię'
+              ),
+              onSaved: (input) => inputUsername = input,
+            ),
+
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Notatka'
+              ),
+              onSaved: (input) => inputNote = input,
+            ),
+
+            SizedBox(height: 20,),
+
+            OutlineButton(
+              onPressed: () {
+                this.addNewNote().then((e) => print('Dodano'));
+              },
+              child: Text('Dodaj'),    
+            ),
+
           ],
         ),
       ),
