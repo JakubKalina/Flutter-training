@@ -1,15 +1,44 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+
+import '../constants.dart';
 
 class Edit extends StatefulWidget {
-  Edit({Key key, this.title}) : super(key: key);
+  Edit({Key key, this.noteId}) : super(key: key);
 
-  final String title;
+  final int noteId;
 
   @override
   _EditState createState() => _EditState();
 }
 
 class _EditState extends State<Edit> {
+
+  int noteId;
+  String inputUsername, inputNote;
+
+    @override
+    void initState() {
+      super.initState();
+      this.noteId = widget.noteId;
+    }
+
+
+  _editNote() async {
+
+    final url = '$apiAddress/edit';
+
+    final body = jsonEncode({"id": "${this.noteId}","username":"${this.inputUsername}","note":"${this.inputNote}"});
+
+    Map<String, String> headers = {"Content-type": "application/json"};
+
+    print(body);
+    final response = await put(url, headers: headers, body: body);
+    print(response.body);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -99,9 +128,30 @@ class _EditState extends State<Edit> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Edit'
-            )
+
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Imię'
+              ),
+              onChanged: (text) => inputUsername = text,
+            ),
+
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Notatka'
+              ),
+              onChanged: (text) => inputNote = text,
+            ),
+
+            SizedBox(height: 20,),
+
+            OutlineButton(
+              onPressed: () {
+                this._editNote();
+              },
+              child: Text('Dodaj'),    
+            ),
+
           ],
         ),
       ),

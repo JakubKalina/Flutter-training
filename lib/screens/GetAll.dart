@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:user_notes/screens/Edit.dart';
 import 'package:user_notes/userNote.dart';
 
 import '../constants.dart';
@@ -146,7 +147,7 @@ class _GetAllState extends State<GetAll> {
                         children: <Widget>[
                           ListTile(
                             leading: Icon(Icons.note),
-                            title: Text(allNotes[index].username),
+                            title: Text('Id: ' + allNotes[index].id.toString() + ' należy do: ' + allNotes[index].username),
                             subtitle: Text(allNotes[index].note),
                           ),
                           ButtonBar(
@@ -154,7 +155,7 @@ class _GetAllState extends State<GetAll> {
                               FlatButton(
                                 child: Text('Edytuj'),
                                 onPressed: () {
-                                  Navigator.pushReplacementNamed(context, '/Edit', arguments: <String,String> {'id' : allNotes[index].id.toString()});
+                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => Edit(noteId: allNotes[index].id,)));
                                 },
                               ),
                               FlatButton(
