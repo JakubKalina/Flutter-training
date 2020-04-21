@@ -37,8 +37,13 @@ class _GetAllState extends State<GetAll> {
     }
 
     // Remove note by Id
-    Future<void> deleteNoteById(int noteId) async {
+    Future<void> deleteNote(int noteId) async {
+      final url = '$apiAddress/delete';
 
+      Map<String, String> headers = {"Content-type": "application/json", "id": "${noteId}"};
+
+      final response = await delete(url, headers: headers);
+      print(response.body);
     }
 
 
@@ -154,7 +159,11 @@ class _GetAllState extends State<GetAll> {
                               ),
                               FlatButton(
                                 child: Text('Usuń'),
-                                onPressed: () {},
+                                onPressed: () {
+                                  deleteNote(allNotes[index].id).then((e) {
+                                    this.getAllNotes();
+                                  });                              
+                                },
                               )
                             ],
                           )

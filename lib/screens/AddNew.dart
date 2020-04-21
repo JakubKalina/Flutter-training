@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+
+import '../constants.dart';
 
 class AddNew extends StatefulWidget {
   AddNew({Key key, this.title}) : super(key: key);
@@ -14,11 +19,24 @@ class _AddNewState extends State<AddNew> {
   int inputId;
   String inputUsername, inputNote;
 
-  Future<void> addNewNote() async {
-    print(inputId);
-    print(inputUsername);
-    print(inputNote);
+  void addNewNote() {
+    this._addNewNote();
   }
+
+  _addNewNote() async {
+
+    final url = '$apiAddress/addNew';
+
+    final body = jsonEncode({"id": "${this.inputId}","username":"${this.inputUsername}","note":"${this.inputNote}"});
+
+    Map<String, String> headers = {"Content-type": "application/json"};
+
+    print(body);
+    final response = await post(url, headers: headers, body: body);
+    print(response.body);
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -112,28 +130,28 @@ class _AddNewState extends State<AddNew> {
               decoration: InputDecoration(
                 labelText: 'Id'
               ),
-              onSaved: (input) => inputId = int.parse(input),
+              onChanged: (text) => inputId = int.parse(text),
             ),
 
             TextFormField(
               decoration: InputDecoration(
                 labelText: 'Imię'
               ),
-              onSaved: (input) => inputUsername = input,
+              onChanged: (text) => inputUsername = text,
             ),
 
             TextFormField(
               decoration: InputDecoration(
                 labelText: 'Notatka'
               ),
-              onSaved: (input) => inputNote = input,
+              onChanged: (text) => inputNote = text,
             ),
 
             SizedBox(height: 20,),
 
             OutlineButton(
               onPressed: () {
-                this.addNewNote().then((e) => print('Dodano'));
+                this.addNewNote();
               },
               child: Text('Dodaj'),    
             ),
